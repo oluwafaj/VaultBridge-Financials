@@ -3,7 +3,7 @@ name: "Terraform Infrastructure Deployment"
 on:
   push:
     branches:
-      - main  # Runs whenever you push to the main branch
+      - main
 
 permissions:
   contents: read
@@ -12,6 +12,8 @@ jobs:
   terraform:
     name: "Terraform Apply"
     runs-on: ubuntu-latest
+    
+    # These secrets allow GitHub to log into your Azure Subscription
     env:
       ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
@@ -25,8 +27,14 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
+      # Explicitly defining backend config here solves the 404/ResourceGroupNotFound error
       - name: Terraform Init
-        run: terraform init
+        run: |
+          terraform init \
+            -backend-config="resource_group_name=vaultbridge-financials-rg" \
+            -backend-config="storage_account_name=vbfstateterraformiac" \
+            -backend-config="container_name=tfstate" \
+            -backend-config="key=terraform.tfstate"
 
       - name: Terraform Plan
         run: terraform plan -input=false
