@@ -1,0 +1,33 @@
+# Local .terraform folder containing binaries and plugins
+.terraform/
+
+# Distributed state files (since you use Azure Backend, these shouldn't be local)
+*.tfstate
+*.tfstate.*
+
+# Backup and error files (like the errored.tfstate we just discussed)
+errored.tfstate
+*.tfstate.backup
+
+# Crash log files
+crash.log
+
+# Ignore terraform.tfvars as it often contains sensitive secrets/passwords
+*.tfvars
+*.tfvars.json
+
+# Ignore variables that end with .local
+*.locals.tf
+
+# Ignore CLI configuration files
+.terraformrc
+terraform.rc
+
+# MacOS specific files (to keep your repo clean from your MacBook)
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Log files
+*.log
