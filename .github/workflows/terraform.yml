@@ -13,7 +13,6 @@ jobs:
     name: "Terraform Apply"
     runs-on: ubuntu-latest
     
-    # Global environment variables for Azure Authentication
     env:
       ARM_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
       ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
@@ -27,7 +26,6 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      # 1. Initialize Backend
       - name: Terraform Init
         run: |
           terraform init \
@@ -37,7 +35,6 @@ jobs:
             -backend-config="container_name=tfstate" \
             -backend-config="key=terraform.tfstate"
 
-      # 2. Plan (Injecting DB Credentials)
       - name: Terraform Plan
         run: terraform plan -input=false
         env:
@@ -45,7 +42,6 @@ jobs:
           TF_VAR_db_password: ${{ secrets.DB_PASSWORD }}
           TF_VAR_ssh_public_key: ${{ secrets.VM_SSH_PUBLIC_KEY }}
 
-      # 3. Apply (Injecting DB Credentials)
       - name: Terraform Apply
         run: terraform apply -auto-approve -input=false
         env:
