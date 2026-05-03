@@ -45,3 +45,7 @@ variable "db_password" {
   type        = string
   sensitive   = true
 }
+variable "ssh_public_key" {
+  description = "The public SSH key for VM access"
+  type        = string
+}
